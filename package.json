@@ -1,0 +1,77 @@
+{
+  "name": "hardhat-example",
+  "description": "hardhat-example",
+  "version": "1.0.0",
+  "author": {
+    "name": "LinKenCong",
+    "url": "https://github.com/LinKenCong"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "@openzeppelin/contracts": "^4.9.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@typechain/ethers-v6": "^0.4.0",
+    "@typechain/hardhat": "^8.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": ">=9.1.0",
+    "@types/node": ">=16.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "chai": "^4.2.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "ethers": "^6.4.0",
+    "hardhat": "^2.17.0",
+    "hardhat-deploy": "^0.11.34",
+    "hardhat-gas-reporter": "^1.0.9",
+    "husky": "^8.0.3",
+    "prettier": "^3.0.0",
+    "prettier-plugin-solidity": "^1.1.3",
+    "solhint": "^3.4.1",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.8.4",
+    "ts-generator": "^0.1.1",
+    "ts-node": ">=8.0.0",
+    "typechain": "^8.1.0",
+    "typescript": ">=4.5.0"
+  },
+  "files": [
+    "contracts"
+  ],
+  "keywords": [
+    "blockchain",
+    "ethers",
+    "ethereum",
+    "hardhat",
+    "smart-contracts",
+    "solidity",
+    "typescript",
+    "typechain"
+  ],
+  "scripts": {
+    "clean": "rm -rf ./artifacts ./cache ./coverage ./types ./coverage.json ./deployments/localhost",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"test/**/*.ts\" && yarn typechain",
+    "deploy:contracts": "hardhat deploy",
+    "lint": "yarn lint:sol && yarn lint:ts && yarn prettier:check",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",
+    "prettier:check": "prettier --check \"**/*.{js,json,md,sol,ts,yml}\"",
+    "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
+    "task:deployGreeter": "hardhat task:deployGreeter",
+    "task:setGreeting": "hardhat task:setGreeting",
+    "test": "hardhat test",
+    "typechain": "hardhat typechain"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn prettier:write"
+    }
+  }
+}
