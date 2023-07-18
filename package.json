@@ -1,6 +1,6 @@
 {
-  "name": "hardhat-example",
-  "description": "hardhat-example",
+  "name": "kyrie-dao-core",
+  "description": "Create a decentralized autonomous organization (DAO) built using ERC6551.",
   "version": "1.0.0",
   "author": {
     "name": "LinKenCong",
@@ -67,11 +67,7 @@
     "task:deployGreeter": "hardhat task:deployGreeter",
     "task:setGreeting": "hardhat task:setGreeting",
     "test": "hardhat test",
-    "typechain": "hardhat typechain"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn prettier:write"
-    }
+    "typechain": "hardhat typechain",
+    "postinstall": "husky install"
   }
 }

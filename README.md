@@ -22,7 +22,6 @@ this [website](https://iancoleman.io/bip39/) to generate one.
 
 Then, proceed with installing dependencies:
 
-
 ```sh
 $ yarn install
 ```
