@@ -28,7 +28,7 @@ contract GovernorContract is
         uint256 _votingPeriod,
         uint256 _votingDelay
     )
-        Governor("GovernorContract")
+        Governor("KyrieDAO")
         GovernorSettings(_votingDelay, _votingPeriod, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_quorumPercentage)
