@@ -1,16 +1,9 @@
-# hardhat-example [![Hardhat][hardhat-badge]][hardhat]
+# kyrie-dao-core [![Hardhat][hardhat-badge]][hardhat]
 
 [hardhat]: https://hardhat.org/
 [hardhat-badge]: https://img.shields.io/badge/Built%20with-Hardhat-FFDB1C.svg
 
-A Hardhat-based template for developing Solidity smart contracts, with sensible defaults.
-
-- [Hardhat](https://github.com/nomiclabs/hardhat): compile, run and test smart contracts
-- [TypeChain](https://github.com/ethereum-ts/TypeChain): generate TypeScript bindings for smart contracts
-- [Ethers](https://github.com/ethers-io/ethers.js/): renowned Ethereum library and wallet implementation
-- [Solhint](https://github.com/protofire/solhint): code linter
-- [Solcover](https://github.com/sc-forks/solidity-coverage): code coverage
-- [Prettier Plugin Solidity](https://github.com/prettier-solidity/prettier-plugin-solidity): code formatter
+Create a decentralized autonomous organization (DAO) built using ERC6551.
 
 ## Usage
 
