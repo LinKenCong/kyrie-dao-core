@@ -64,6 +64,7 @@
     "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",
     "prettier:check": "prettier --check \"**/*.{js,json,md,sol,ts,yml}\"",
     "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
+    "prettier:write.sol": "prettier --write 'contracts/**/*.sol'",
     "task:deployGreeter": "hardhat task:deployGreeter",
     "task:setGreeting": "hardhat task:setGreeting",
     "test": "hardhat test",
