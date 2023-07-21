@@ -10,13 +10,18 @@ import { Counters } from "@openzeppelin/contracts/utils/Counters.sol";
 
 contract GovernanceNFT is ERC721, ERC721Enumerable, Pausable, Ownable, EIP712, ERC721Votes {
     using Counters for Counters.Counter;
-
     Counters.Counter private _tokenIdCounter;
+
+    string public baseURI;
 
     constructor() ERC721("GovernanceNFT", "GNFT") EIP712("GovernanceNFT", "1") {}
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "www.GovernanceNFT.io/";
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
+    }
+
+    function setBaseURI(string memory newURI) external onlyOwner {
+        baseURI = newURI;
     }
 
     function pause() public onlyOwner {

@@ -5,6 +5,7 @@ import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
 import { IERC6551Registry } from "./IERC6551Registry.sol";
 
 contract ERC6551Registry is IERC6551Registry {
+    // create account call initcode failed
     error InitializationFailed();
 
     function createAccount(
@@ -14,23 +15,8 @@ contract ERC6551Registry is IERC6551Registry {
         uint256 tokenId,
         uint256 salt,
         bytes calldata initData
-    ) external returns (address) {
-        bytes memory code = _creationCode(implementation, chainId, tokenContract, tokenId, salt);
-
-        address _account = Create2.computeAddress(bytes32(salt), keccak256(code));
-
-        if (_account.code.length != 0) return _account;
-
-        _account = Create2.deploy(0, bytes32(salt), code);
-
-        if (initData.length != 0) {
-            (bool success, ) = _account.call(initData);
-            if (!success) revert InitializationFailed();
-        }
-
-        emit AccountCreated(_account, implementation, chainId, tokenContract, tokenId, salt);
-
-        return _account;
+    ) external virtual returns (address) {
+        return _createAccount(implementation, chainId, tokenContract, tokenId, salt, initData);
     }
 
     function account(
@@ -39,10 +25,41 @@ contract ERC6551Registry is IERC6551Registry {
         address tokenContract,
         uint256 tokenId,
         uint256 salt
-    ) external view returns (address) {
-        bytes32 bytecodeHash = keccak256(_creationCode(implementation, chainId, tokenContract, tokenId, salt));
+    ) external view virtual returns (address) {
+        return _getAccount(implementation, chainId, tokenContract, tokenId, salt);
+    }
 
+    function _getAccount(
+        address implementation,
+        uint256 chainId,
+        address tokenContract,
+        uint256 tokenId,
+        uint256 salt
+    ) internal view virtual returns (address) {
+        bytes32 bytecodeHash = keccak256(_creationCode(implementation, chainId, tokenContract, tokenId, salt));
         return Create2.computeAddress(bytes32(salt), bytecodeHash);
+    }
+
+    function _createAccount(
+        address implementation,
+        uint256 chainId,
+        address tokenContract,
+        uint256 tokenId,
+        uint256 salt,
+        bytes memory initData
+    ) internal virtual returns (address) {
+        bytes memory code = _creationCode(implementation, chainId, tokenContract, tokenId, salt);
+        address _account = Create2.computeAddress(bytes32(salt), keccak256(code));
+        if (_account.code.length != 0) return _account;
+
+        _account = Create2.deploy(0, bytes32(salt), code);
+        if (initData.length != 0) {
+            (bool success, ) = _account.call(initData);
+            if (!success) revert InitializationFailed();
+        }
+
+        emit AccountCreated(_account, implementation, chainId, tokenContract, tokenId, salt);
+        return _account;
     }
 
     function _creationCode(

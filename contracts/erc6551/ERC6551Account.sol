@@ -9,7 +9,9 @@ import { Bytecode } from "../utils/sstore2/Bytecode.sol";
 import { IERC6551Account } from "./IERC6551Account.sol";
 
 contract ERC6551Account is IERC165, IERC1271, IERC6551Account {
-    uint256 public nonce;
+    uint256 private _nonce;
+
+    event TransactionExecuted(address indexed target, uint256 indexed value, bytes data, uint256 nonce);
 
     receive() external payable {}
 
@@ -20,17 +22,16 @@ contract ERC6551Account is IERC165, IERC1271, IERC6551Account {
     ) external payable returns (bytes memory result) {
         require(msg.sender == owner(), "Not token owner");
 
-        ++nonce;
-        emit TransactionExecuted(to, value, data);
-
         bool success;
         (success, result) = to.call{ value: value }(data);
-
         if (!success) {
             assembly {
                 revert(add(result, 32), mload(result))
             }
         }
+
+        ++_nonce;
+        emit TransactionExecuted(to, value, data, _nonce);
     }
 
     function token() external view returns (uint256 chainId, address tokenContract, uint256 tokenId) {
@@ -43,6 +44,10 @@ contract ERC6551Account is IERC165, IERC1271, IERC6551Account {
         if (chainId != block.chainid) return address(0);
 
         return IERC721(tokenContract).ownerOf(tokenId);
+    }
+
+    function nonce() external view returns (uint256) {
+        return _nonce;
     }
 
     function supportsInterface(bytes4 interfaceId) public pure returns (bool) {

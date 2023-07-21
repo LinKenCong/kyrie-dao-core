@@ -3,8 +3,6 @@ pragma solidity ^0.8.18;
 
 /// @dev the ERC-165 identifier for this interface is `0x400a0398`
 interface IERC6551Account {
-    event TransactionExecuted(address indexed target, uint256 indexed value, bytes data);
-
     /// @dev Token bound accounts MUST implement a `receive` function.
     ///
     /// Token bound accounts MAY perform arbitrary logic to restrict conditions
