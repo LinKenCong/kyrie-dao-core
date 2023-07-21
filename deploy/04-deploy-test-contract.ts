@@ -5,6 +5,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy, get } = hre.deployments;
+  console.log("----------------------------------------------------");
   const timeLock = await get("TimeLock");
 
   const greeter = await deploy("Greeter", {
