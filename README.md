@@ -3,44 +3,53 @@
 [hardhat]: https://hardhat.org/
 [hardhat-badge]: https://img.shields.io/badge/Built%20with-Hardhat-FFDB1C.svg
 
-Create a decentralized autonomous organization (DAO) built using ERC6551.
+## Overview
 
-## Usage
+This project aims to create a decentralized autonomous organization (DAO) using blockchain technology. The DAO will
+utilize the ERC721 protocol to create a special smart contract account for DAO members. This account will allow flexible
+management of DAO assets, bind with DAO's NFT (ERC721), serve as DAO member authentication for governance voting, and
+can hold other blockchain digital assets. The project also has the potential for future expansion and additional
+functionality.
 
-### Pre Requisites
+## Features
 
-Before being able to run any command, you need to create a `.env` file and set a BIP-39 compatible mnemonic as an
-environment variable. You can follow the example in `.env.example`. If you don't already have a mnemonic, you can use
-this [website](https://iancoleman.io/bip39/) to generate one.
+- Creation of a decentralized autonomous organization (DAO)
+- Utilization of the ERC721 protocol for creating a special smart contract account
+- Flexible management of DAO assets
+- Binding of DAO's NFT (ERC721) with the smart contract account
+- DAO member authentication for governance voting
+- Ability to hold other blockchain digital assets
 
-Then, proceed with installing dependencies:
+## Usage Instructions
 
-```sh
-$ yarn install
-```
+1. Clone the repository: `git clone git@github.com:LinKenCong/kyrie-dao-core.git`
+2. Install the necessary dependencies: `yarn install`
+3. Deploy the smart contract to your preferred blockchain network: `yran deploy:contracts --network <network-name>`
 
-## Local development with Ganache
+## Contribution Guidelines
 
-### Install Ganache
+Welcome to contribute to this project! If you have found any issues or have suggestions for improvement, please submit
+an issue or make a pull request.
 
-```sh
-$ npm i -g ganache
-```
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your forked repository.
+5. Submit a pull request, clearly describing the changes you have made.
 
-### Run a Development Blockchain
+## Current Project Status
 
-```sh
-$ ganache -s test
-```
-
-> The `-s test` passes a seed to the local chain and makes it deterministic
-
-Make sure to set the mnemonic in your `.env` file to that of the instance running with Ganache.
+Currently, we are working on refining the test code and optimizing the contract details.
 
 ## License
 
-This project is licensed under MIT.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-## Reference Project
+## Contact
 
-https://github.com/PaulRBerg/hardhat-template
+For any questions or suggestions, please feel free to reach out to me at
+[linkencong@foxmail.com](mailto:linkencong@foxmail.com).
+
+We appreciate your interest and contributions to this project!
+
+Please let me know if you have any further questions or if there's anything else I can assist you with.
