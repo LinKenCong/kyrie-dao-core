@@ -5,8 +5,8 @@
 
 ## Overview
 
-This project aims to create a decentralized autonomous organization (DAO) using blockchain technology. The DAO will
-utilize the ERC721 protocol to create a special smart contract account for DAO members. This account will allow flexible
+This project aims to create a decentralized autonomous organization (DAO) using ERC6551 protocol. The DAO will Utilize
+the ERC6551 protocol to create a special smart contract account for DAO members. This account will allow flexible
 management of DAO assets, bind with DAO's NFT (ERC721), serve as DAO member authentication for governance voting, and
 can hold other blockchain digital assets. The project also has the potential for future expansion and additional
 functionality.
