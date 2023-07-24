@@ -1,4 +1,4 @@
-# kyrie-dao-core [![Hardhat][hardhat-badge]][hardhat]
+# Kyrie DAO Core [![Hardhat][hardhat-badge]][hardhat]
 
 [hardhat]: https://hardhat.org/
 [hardhat-badge]: https://img.shields.io/badge/Built%20with-Hardhat-FFDB1C.svg
@@ -13,12 +13,11 @@ functionality.
 
 ## Features
 
-- Creation of a decentralized autonomous organization (DAO)
-- Utilization of the ERC721 protocol for creating a special smart contract account
-- Flexible management of DAO assets
-- Binding of DAO's NFT (ERC721) with the smart contract account
-- DAO member authentication for governance voting
-- Ability to hold other blockchain digital assets
+- Create a decentralized autonomous organization (DAO) that restricts governance identity accounts.
+- Utilize the ERC6551 protocol to create a smart contract account for flexible management of assets.
+- Bind the DAO's NFTs (ERC721) with the ERC6551 accounts.
+- The ERC6551 accounts are capable of holding other blockchain digital assets.
+- Each member of the DAO has only one vote in governance proposals.
 
 ## Usage Instructions
 
