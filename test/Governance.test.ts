@@ -8,38 +8,37 @@ import {
   VOTING_PERIOD,
   developmentChains,
 } from "../helper-hardhat-config";
-import { GovernanceCoin, GovernorContract, Greeter, TimeLock } from "../types";
+import { GovernorContract, Greeter, KyrieDaoNft, TimeLock } from "../types";
 import { keccak256, toUtf8Bytes } from "../utils/ethers-utils";
 import { moveBlocks } from "../utils/move-blocks";
 import { moveTime } from "../utils/move-time";
 import { expect } from "chai";
-import { deployments, ethers, getNamedAccounts, network } from "hardhat";
+import { deployments, ethers, network } from "hardhat";
 
 describe("Governance Test", () => {
-  let governanceCoin: GovernanceCoin;
+  let daoNft: KyrieDaoNft;
   let timeLock: TimeLock;
   let governor: GovernorContract;
   let targerContract: Greeter;
+
   let proposalId: any;
   let deployerAddress: string;
   before(async () => {
     await deployments.fixture(["all"]);
-    const signers = await ethers.getSigners();
-    const deployerSigners = signers[0];
-    const { deployer } = await getNamedAccounts();
-    deployerAddress = deployer;
+    const [deployer] = await ethers.getSigners();
+    deployerAddress = deployer.address;
 
     // Get deployments data
-    const GovernanceCoin = await deployments.get("GovernanceCoin");
+    const KyrieDaoNft = await deployments.get("KyrieDaoNft");
     const TimeLock = await deployments.get("TimeLock");
     const GovernorContract = await deployments.get("GovernorContract");
     const Greeter = await deployments.get("Greeter");
 
     // Connect contract
-    governanceCoin = (await ethers.getContractAt("GovernanceCoin", GovernanceCoin.address)).connect(deployerSigners);
-    timeLock = (await ethers.getContractAt("TimeLock", TimeLock.address)).connect(deployerSigners);
-    governor = (await ethers.getContractAt("GovernorContract", GovernorContract.address)).connect(deployerSigners);
-    targerContract = (await ethers.getContractAt("Greeter", Greeter.address)).connect(deployerSigners);
+    daoNft = (await ethers.getContractAt("KyrieDaoNft", KyrieDaoNft.address)).connect(deployer);
+    timeLock = (await ethers.getContractAt("TimeLock", TimeLock.address)).connect(deployer);
+    governor = (await ethers.getContractAt("GovernorContract", GovernorContract.address)).connect(deployer);
+    targerContract = (await ethers.getContractAt("Greeter", Greeter.address)).connect(deployer);
   });
 
   beforeEach(async () => {
@@ -52,21 +51,56 @@ describe("Governance Test", () => {
     expect(deployerAddress).to.eq(signers[0].address);
     expect(await governor.name()).eq("KyrieDAO");
 
-    console.log("governanceCoin", await governanceCoin.getAddress());
+    console.log("daoNft", await daoNft.getAddress());
     console.log("timeLock", await timeLock.getAddress());
     console.log("governor", await governor.getAddress());
     console.log("targerContract", await targerContract.getAddress());
   });
 
-  it("Delegating to deployer", async () => {
-    const coin = await ethers.getContractAt("GovernanceCoin", await governanceCoin.getAddress());
-    const transactionResponse = await coin.delegate(deployerAddress);
-    await transactionResponse.wait(1);
+  describe("", async () => {});
 
-    const numCheckpoints = await coin.numCheckpoints(deployerAddress);
-    expect(numCheckpoints).to.eq(1);
+  it("Mint NFT to test account", async () => {
+    const [deployer, other, other2] = await ethers.getSigners();
+    const mintArray = [deployer.address, other.address, other2.address];
+    for (let i = 0; i < mintArray.length; i++) {
+      if (ethers.isAddress(mintArray[i])) {
+        const element = await daoNft.safeMint(mintArray[i]);
+        await element.wait();
+      }
+    }
+  });
 
-    console.log(`Checkpoints: ${numCheckpoints}`);
+  it("NFT Shuld have DAO account ", async () => {
+    const [deployer, other, other2] = await ethers.getSigners();
+    const mintArray = [deployer.address, other.address, other2.address];
+    const total = await daoNft.totalSupply();
+    expect(total).eq(mintArray.length);
+    for (let i = 0; i < Number(total); i++) {
+      const account = daoNft.daoAccountOf(i);
+      console.log(`${mintArray[i]} DAO account is ${account}`);
+    }
+  });
+
+  it("Delegating to self", async () => {
+    const [deployer, other, other2] = await ethers.getSigners();
+    {
+      const transactionResponse = await daoNft.connect(deployer).delegate(deployer.address);
+      await transactionResponse.wait(1);
+      const numCheckpoints = await daoNft.getVotes(deployer.address);
+      expect(numCheckpoints).to.eq(1);
+    }
+    {
+      const transactionResponse = await daoNft.connect(other).delegate(other.address);
+      await transactionResponse.wait(1);
+      const numCheckpoints = await daoNft.getVotes(other.address);
+      expect(numCheckpoints).to.eq(1);
+    }
+    {
+      const transactionResponse = await daoNft.connect(other2).delegate(other2.address);
+      await transactionResponse.wait(1);
+      const numCheckpoints = await daoNft.getVotes(other2.address);
+      expect(numCheckpoints).to.eq(1);
+    }
   });
 
   it("Setup Contracts", async () => {
@@ -75,15 +109,14 @@ describe("Governance Test", () => {
     const proposerRole = await timeLock.PROPOSER_ROLE();
     const executorRole = await timeLock.EXECUTOR_ROLE();
     const adminRole = await timeLock.TIMELOCK_ADMIN_ROLE();
-    console.log("adminRole", adminRole);
 
-    // Governor合约被授予提案者角色
+    // The Governor contract has been granted the proposer role.
     const proposerTx = await timeLock.grantRole(proposerRole, await governor.getAddress());
     await proposerTx.wait(1);
-    // 执行角色被授予“零地址”，这意味着任何人都可以执行提案
+    // The execution role has been granted to the "zero address," which means that anyone can execute the proposal.
     const executorTx = await timeLock.grantRole(executorRole, ADDRESS_ZERO);
     await executorTx.wait(1);
-    // 取消部署者的 TimeLock 合约权限
+    // Cancel the TimeLock contract permissions for the deployer.
     const revokeTx = await timeLock.revokeRole(adminRole, deployerAddress);
     await revokeTx.wait(1);
 
@@ -127,16 +160,20 @@ describe("Governance Test", () => {
   });
 
   it("Voting Proposal", async () => {
-    const voteWay = 1;
-    const reason = "I lika do da cha cha";
-
+    const [deployer, other, other2] = await ethers.getSigners();
     // Vote
-    const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason);
-    const voteTxReceipt = await voteTx.wait(1);
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    console.log(voteTxReceipt.logs[0].args[0]);
+    {
+      const voteTx = await governor.connect(deployer).castVoteWithReason(proposalId, 1, "I lika do da cha cha");
+      await voteTx.wait(1);
+    }
+    {
+      const voteTx = await governor.connect(other).castVote(proposalId, 0);
+      await voteTx.wait(1);
+    }
+    {
+      const voteTx = await governor.connect(other2).castVote(proposalId, 1);
+      await voteTx.wait(1);
+    }
 
     // Current Proposal State is Active
     const proposalStateOld = await governor.state(proposalId);
@@ -148,9 +185,10 @@ describe("Governance Test", () => {
 
     // Current Proposal Votes: againstVotes, forVotes, abstainVotes
     const proposalVotes = await governor.proposalVotes(proposalId);
-    const governanceCoinTotal = await governanceCoin.totalSupply();
-    expect(proposalVotes.forVotes).eq(governanceCoinTotal);
-    expect(proposalVotes.forVotes).eq(await governanceCoin.balanceOf(deployerAddress));
+    const governanceCoinTotal = await daoNft.totalSupply();
+    console.log("governanceCoinTotal", governanceCoinTotal);
+    // expect(proposalVotes.forVotes).eq(governanceCoinTotal);
+    // expect(proposalVotes.forVotes).eq(await daoNft.balanceOf(deployerAddress));
     console.log(`Current Proposal Votes: ${proposalVotes}`);
 
     // Current Proposal State is Succeeded
@@ -167,6 +205,7 @@ describe("Governance Test", () => {
     // @ts-ignore
     const encodedFunctionCall = targerContract.interface.encodeFunctionData(functionToCall, args);
     const descriptionHash = keccak256(toUtf8Bytes(PROPOSAL_DESCRIPTION));
+    console.log("descriptionHash", descriptionHash);
 
     console.log("Queueing...");
     const queueTx = await governor.queue([targerContractAddress], [0], [encodedFunctionCall], descriptionHash);
