@@ -63,7 +63,6 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   namedAccounts: {
     deployer: 0,
-    tokenOwner: 1,
   },
   networks: {
     hardhat: {
