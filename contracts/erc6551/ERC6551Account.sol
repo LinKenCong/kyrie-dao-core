@@ -30,7 +30,7 @@ contract ERC6551Account is IERC165, IERC1271, IERC6551Account {
             }
         }
 
-        ++_nonce;
+        _nonce++;
         emit TransactionExecuted(to, value, data, _nonce);
     }
 

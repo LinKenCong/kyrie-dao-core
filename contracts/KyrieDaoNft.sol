@@ -27,6 +27,7 @@ contract KyrieDaoNft is ERC721, Pausable, Ownable, EIP712, ERC721Votes, ERC6551R
 
     constructor(address _accountContract) ERC721("KyrieDaoNft", "KDN") EIP712("KyrieDaoNft", "1") {
         accountContract = _accountContract;
+        _chainId = block.chainid;
     }
 
     /**
