@@ -19,7 +19,7 @@ export const developmentChains = ["hardhat", "localhost"];
 export const proposalsFile = "proposals.json";
 
 // Governor Values
-export const QUORUM_PERCENTAGE = 4; // 需要 4% 的选民通过
+export const QUORUM_PERCENTAGE = 50; // 需要 4% 的选民通过
 export const MIN_DELAY = 3600; // 1 小时 - 投票通过后，您有 1 小时的时间才能颁布
 // export const VOTING_PERIOD = 45818 // 45818 区块 - 投票持续多长时间。 即使对于本地测试来说，这也相当长
 export const VOTING_PERIOD = 5; // 5 区块 - 投票持续多长时间

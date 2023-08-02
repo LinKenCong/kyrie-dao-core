@@ -19,3 +19,4 @@ deployments
 coverage.json
 package-lock.json
 yarn.lock
+.deps
